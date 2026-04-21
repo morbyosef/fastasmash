@@ -31,7 +31,7 @@ enum Commands {
 fn main() {
     let cli = Cli::parse();
     
-    let fasta_file = parse_file(cli.fasta_file);
+    let fasta_file = parse_file(cli.fasta_file, cli.id.as_deref());
 
     match &cli.command {
         Some(Commands::Count {}) => {
@@ -43,7 +43,7 @@ fn main() {
             header(&fasta_file);
         }
         Some(Commands::View {}) => {
-            view(&fasta_file, cli.id.as_deref());
+            view(&fasta_file);
         }
         None => {}
     }
