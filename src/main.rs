@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
-use crate::{commands::count::count, parser::fasta::parse_file};
+use crate::{commands::count::count, commands::header::header, parser::fasta::parse_file};
 
 mod parser;
 mod model;
@@ -20,9 +20,8 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Count {
-
-    }
+    Count {},
+    Header {},
 }
 
 fn main() {
@@ -34,6 +33,10 @@ fn main() {
             let file_path = fasta_file.path.display().to_string();
             let records_count = count(&fasta_file);
             println!("File {file_path} has {records_count} records")
+        }
+        Some(Commands::Header {}) => {
+            let fasta_file = parse_file(cli.fasta_file);
+            header(&fasta_file);
         }
         None => {}
     }
