@@ -5,12 +5,12 @@ pub struct FastaRecord {
     pub sequence: String,
 }
 
-impl FastaRecord {
-    pub fn from(string_record: String) -> FastaRecord {
-        let mut lines = string_record.lines();
-        let header = lines.next().unwrap_or_default();
+impl From<String> for FastaRecord {
+    fn from(record_string: String) -> Self {
+        let mut lines = record_string.lines();
+        let header = lines.next().expect("Invalid Record");
         let (id, description) = header.split_once(' ').unwrap_or((header, ""));
-        let sequence = lines.collect::<String>();
+        let sequence = lines.map(str::trim).collect();
         FastaRecord {
             id: id.to_string(),
             description: description.to_string(),
