@@ -29,7 +29,6 @@ fn main() {
     let cli = Cli::parse();
     let fasta_file = parse_file(cli.fasta_file.clone());
     
-
     match &cli.command {
         Some(Commands::Count {}) => {
             let file_path = cli.fasta_file.display().to_string();
