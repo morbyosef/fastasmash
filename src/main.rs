@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
-use crate::{commands::count::count, commands::header::header, commands::view::view, parser::fasta::parse_file};
+use crate::{commands::count::count, commands::header::header, commands::view::view, parser::fasta::{filter_by_id, parse_file}};
 
 mod parser;
 mod model;
@@ -14,7 +14,7 @@ struct Cli {
     #[arg(short, long)]
     fasta_file: PathBuf,
 
-    #[arg(long)]
+    #[arg(long, help = "Filter records by ID (substring match: --id seq matches seq1, seq2, etc.)")]
     id: Option<String>,
 
     #[command(subcommand)]
@@ -30,8 +30,11 @@ enum Commands {
 
 fn main() {
     let cli = Cli::parse();
-    
-    let fasta_file = parse_file(cli.fasta_file, cli.id.as_deref());
+
+    let mut fasta_file = parse_file(cli.fasta_file);
+    if let Some(id) = cli.id.as_deref() {
+        fasta_file = filter_by_id(fasta_file, id);
+    }
 
     match &cli.command {
         Some(Commands::Count {}) => {
