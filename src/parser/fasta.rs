@@ -4,10 +4,7 @@ use crate::model::record::FastaRecord;
 use crate::model::file::FastaFile;
 
 pub fn parse_file(path: PathBuf) -> FastaFile {
-    let content = fs::read_to_string(&path).unwrap_or_else(|e| {
-        eprintln!("Error: could not open '{}': {}", path.display(), e);
-        std::process::exit(1);
-    });
+    let content = fs::read_to_string(&path).expect("Failed to open file");
     let records = content
         .split('>')
         .filter(|s| !s.trim().is_empty())
